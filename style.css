@@ -1,0 +1,196 @@
+section{
+    width: 75%;
+    justify-self: center;
+    border-radius: 20px;
+}
+
+
+/* ==============================
+       CONTEÚDO PRINCIPAL
+       ============================== */
+
+    main {
+        max-width: 1000px;
+        margin: auto;
+    }
+
+
+    /* ==============================
+       CÓDIGO
+       ============================== */
+
+    .code {
+        font-family: 'Courier New', Courier, monospace;
+        border: solid black 1px;
+        background-color: lightgrey;
+        max-width: 90%;
+        margin: auto;
+    }
+
+
+    /* ==============================
+       PRIMEIRA TABELA
+       C1:J20
+       ============================== */
+
+    .machines-table-container {
+        width: 100%;
+        margin: 30px auto;
+        overflow-x: auto;
+
+        border: 1px solid #e1e5ea;
+        border-radius: 12px;
+        background: white;
+
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    #machines-table {
+        width: 100%;
+        border-collapse: collapse;
+
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 14px;
+    }
+
+    #machines-table thead {
+        background-color: #343a40;
+        color: white;
+    }
+
+    #machines-table th {
+        padding: 13px 9px;
+        text-align: center;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    #machines-table td {
+        padding: 11px 9px;
+        text-align: center;
+
+        border-top: 1px solid #e9ecef;
+        border-left: none;
+        border-right: none;
+
+        white-space: nowrap;
+    }
+
+    #machines-table tbody tr {
+        transition: background-color 0.15s ease;
+    }
+
+    #machines-table tbody tr:nth-child(even) {
+        background-color: #fafbfc;
+    }
+
+    #machines-table tbody tr:hover {
+        background-color: #f1f3f5;
+    }
+
+
+    /* ==============================
+       STATUS "ATIVO"
+       ============================== */
+
+    #machines-table .status-active {
+        color: #218838;
+        background-color: #d5ffd5;
+        font-weight: 600;
+    }
+
+
+    /* ==============================
+       SEGUNDA TABELA
+       A22:B26
+       ============================== */
+
+    #summary-table-container {
+        width: 100%;
+        margin: 30px auto;
+        overflow-x: auto;
+
+        border: 1px solid #e1e5ea;
+        border-radius: 12px;
+        background: white;
+
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    #summary-table {
+        width: 100%;
+        border-collapse: collapse;
+
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 14px;
+
+    }
+
+    #summary-table thead {
+        background-color: #343a40;
+        color: white;
+    }
+
+    #summary-table th {
+        padding: 13px 12px;
+        text-align: center;
+        font-weight: 600;
+    }
+
+    #summary-table td {
+        padding: 11px 12px;
+        text-align: center;
+
+        border-top: 1px solid #e9ecef;
+    }
+
+    #summary-table tbody tr:nth-child(even) {
+        background-color: #fafbfc;
+    }
+
+    #summary-table tbody tr:hover {
+        background-color: #f1f3f5;
+    }
+
+
+    /* ==============================
+       TÍTULOS
+       ============================== */
+
+    .machines-table-title {
+        margin-top: 30px;
+        margin-bottom: 10px;
+    }
+
+    .machines-table-subtitle {
+        color: #6c757d;
+        margin-bottom: 15px;
+        font-size: 14px;
+    }
+
+
+    /* ==============================
+       RESPONSIVIDADE
+       ============================== */
+
+    @media (max-width: 768px) {
+
+        .machines-table-container,
+        #summary-table-container {
+            margin-left: 0;
+            margin-right: 0;
+            border-radius: 8px;
+        }
+
+        #machines-table,
+        #summary-table {
+            font-size: 13px;
+        }
+
+        #machines-table th,
+        #machines-table td,
+        #summary-table th,
+        #summary-table td {
+            padding: 9px 10px;
+        }
+    }
