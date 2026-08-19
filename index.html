@@ -21,11 +21,14 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" href="#">Início</a></li>
+                    <!-- <li class="nav-item"><a class="nav-link active" href="#">Início</a></li> -->
                     <!-- <li class="nav-item"><a class="nav-link" href="#sobre">Sobre</a></li> -->
                     <!-- <li class="nav-item"><a class="nav-link" href="#docentes">Docentes</a></li> -->
-                    <li class="nav-item"><a class="nav-link" href="#contato">Contato</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#computadores">Computadores</a></li>
+                    <!-- <li class="nav-item"><a class="nav-link" href="#contato">Contato</a></li> -->
+                    <li class="nav-item"><a class="nav-link" href="#status">Computadores</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#acesso_vpn">Acesso VPN</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#configuração_vpn">Configuração da VPN</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#NixOS">NixOS?</a></li>
                 </ul>
             </div>
         </div>
@@ -123,7 +126,7 @@
             </div>
         </div>
     </section> -->
-    <section>
+    <section id="status">
         <h2 class="machines-table-title">
             Computadores disponíveis
         </h2>
@@ -145,6 +148,380 @@
             </table>
         </div>
     </section>
+
+    <section id="acesso_vpn">
+        <div class="row">
+            <div class="col-md-12">
+                <h2> Procedimento de Acesso </h2>
+                <ol>
+                    <li>Solicitar à CTI (Coordenadoria de Tecnologia da Informação) acesso à VNP do
+                        laboratório 902T pelo <a href="https://helpdesk.serra.ifes.edu.br/">sistema de
+                            chamados</a>.</li>
+                    <li>Enviar email para ppcomp.serra@ifes.edu.br, informando seu nome completo e o nome do
+                        seu orientador(a), solicitando:
+                        <ol style="list-style-type: lower-alpha">
+                            <li>acesso ao <a href="https://calendar.google.com/calendar/u/0?cid=azRyM2hwcWE0OWlzaHU0c3ZwbjljOTFrbXNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ">calendário de reserva das máquinas</a>;</li>
+                            <li>criação de usuário em uma máquina dentre as disponíveis abaixo.</li>
+                        </ol>
+                    </li>
+                    <li>Após ter o acesso aos recursos, adicione um evento na agenda para reserva do computador.
+                        No evento informar o nome, orientador, o computador que será usado e o período de uso.</li>
+                    <li>Para acessar as máquinas, use o comando ssh como ilustrado abaixo: <br>
+                        <div class="code">
+                            ssh joao@172.19.113.7
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <section id="configuração_vpn">
+        <div class="row">
+            <div class="col-md-12">
+                <h2> Configuração da VPN </h2>
+                <i>[A instação e configuração de programas só precisa ser feita uma vez, mas para acessar os
+                    computadores é
+                    necessário estar conectado à VPN]</i>
+                <br>
+                <br>
+                <b> Configuração para Windows </b> <br>
+                0) Fazer o download do instalador do OpenVPN pré-configurado. <br>
+                <ul>
+                    <li><a href="files/openvpn-Cachalote-UDP4-1196-install-2.5.2-I601-amd64.exe">Instalador
+                            -
+                            64 bits (recomendada)</a></li>
+                    <li><a href="files/openvpn-Cachalote-UDP4-1196-install-2.5.2-I601-x86.exe">Instalador
+                            -
+                            32 bits</a></li>
+                </ul>
+                1) Instalar o programa clicando em próximo (next). <br>
+                2) Clicar com o botão direito no ícone indicado na figura abaixo, selecionar a rede
+                Cachalote e clicar em
+                conectar. <br>
+                3) Digitar as credenciais. <br>
+                <img src="images/conexao-openvpn.png"> <br>
+            </div>
+        </div>
+
+        <br>
+        <br>
+
+        <div class="row">
+            <div class="col-md-12">
+                <b> Configuração para Linux </b> <br>
+                0) Fazer download e descompactar pacote contendo 3 arquivos de configuração: <br>
+                <ul>
+                    <li><a href="files/OpenVPN%20Lab%20902T.7z">Pacote com arquivos de
+                            configuração</a>. </li>
+                </ul>
+                1) Vá em configuração de rede. <br>
+                2) Clique no + para adicionar a VPN. <br>
+                3) Entre as 3 opções apresentadas, escolher importar arquivo. <br>
+                4) Escolher o arquivo Cachalote-UDP4-1196.ovpn <br>
+                5) Digitar apenas as credenciais (usuário e senha; as mesmas usadas para acessar o sistema
+                acadêmico) e clicar
+                em adicionar. <br>
+            </div>
+        </div>
+        <br>
+    </section>
+
+    <section id="NixOS">
+        <h2>O que é o NixOS?</h2>
+
+        <p>
+            O <strong>NixOS</strong> é uma distribuição Linux baseada no
+            gerenciador de pacotes <code>Nix</code>. Sua principal característica
+            é a <strong>configuração declarativa</strong>: em vez de instalar
+            programas e configurar o sistema manualmente, descrevemos como ele
+            deve ser configurado e o NixOS constrói o sistema a partir dessa
+            descrição.
+        </p>
+
+        <p>
+            No laboratório, essa configuração é dividida em dois níveis:
+        </p>
+
+        <ul>
+            <li>
+                <strong><code>configuration.nix</code></strong> —
+                configura o sistema operacional e é administrado pelo responsável
+                do laboratório.
+            </li>
+
+            <li>
+                <strong><code>flake.nix</code></strong> —
+                define o ambiente de desenvolvimento de cada projeto e pode ser
+                utilizado pelo próprio usuário.
+            </li>
+        </ul>
+
+        <div class="alert alert-warning">
+            <strong>Importante:</strong>
+            usuários do laboratório não possuem acesso <code>sudo</code>.
+            Portanto, alterações na configuração global devem ser solicitadas
+            ao responsável do laboratório.
+        </div>
+    </section>
+
+
+    <section>
+        <h2>Configuração do sistema: <code>configuration.nix</code></h2>
+
+        <p>
+            A configuração global do NixOS está no arquivo:
+        </p>
+
+        <pre><code>/etc/nixos/configuration.nix</code></pre>
+
+        <p>
+            Ele define características que afetam todo o computador, como
+            programas instalados globalmente, serviços, drivers e configurações
+            de hardware e rede.
+        </p>
+
+        <p>
+            Por exemplo, programas disponíveis para todos os usuários podem ser
+            definidos assim:
+        </p>
+
+        <pre><code>environment.systemPackages = with pkgs; [
+        git
+        firefox
+        vscode
+    ];</code></pre>
+
+        <p>
+            Depois de uma alteração, o sistema é reconstruído pelo administrador:
+        </p>
+
+        <pre><code>sudo nixos-rebuild switch</code></pre>
+
+        <div class="alert alert-info">
+            Se você precisar de um programa instalado globalmente,
+            <strong>solicite ao responsável do laboratório</strong>.
+            Para ferramentas específicas do seu projeto, utilize um Flake.
+        </div>
+    </section>
+
+
+    <section>
+        <h2>Ambientes de desenvolvimento com Flakes</h2>
+
+        <p>
+            Um <strong>Flake</strong> permite declarar as ferramentas e
+            dependências necessárias para um projeto sem modificar a configuração
+            global do computador.
+        </p>
+
+        <p>
+            Isso permite criar ambientes:
+        </p>
+
+        <ul>
+            <li><strong>Reproduzíveis</strong> — o mesmo ambiente pode ser recriado;</li>
+            <li><strong>Isolados</strong> — as dependências do projeto não precisam ser instaladas globalmente;</li>
+            <li><strong>Versionáveis</strong> — a configuração do ambiente pode acompanhar o código no Git.</li>
+        </ul>
+
+        <div class="key-point">
+            <strong>Principal vantagem no laboratório:</strong>
+            você pode configurar as ferramentas necessárias para seu projeto
+            <strong>sem precisar de <code>sudo</code></strong>.
+        </div>
+    </section>
+
+
+    <section>
+        <h2>Criando seu primeiro Flake</h2>
+
+        <p>
+            Dentro da pasta do projeto, crie um arquivo chamado:
+        </p>
+
+        <pre><code>flake.nix</code></pre>
+
+        <p>
+            Um exemplo de ambiente para desenvolvimento Python:
+        </p>
+
+        <pre><code>{
+    description = "Ambiente de desenvolvimento Python";
+
+    inputs.nixpkgs.url =
+        "github:NixOS/nixpkgs/nixos-26.05";
+
+    outputs = { nixpkgs, ... }:
+        let
+        system = "x86_64-linux";
+        pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+        devShells.${system}.default = pkgs.mkShell {
+            packages = with pkgs; [
+            python312
+            git
+            ];
+        };
+        };
+    }</code></pre>
+
+        <p>
+            Os programas declarados em <code>packages</code> estarão disponíveis
+            dentro do ambiente do projeto.
+        </p>
+
+        <p>
+            Para entrar no ambiente:
+        </p>
+
+        <pre><code>nix develop</code></pre>
+
+        <p>
+            A partir desse momento, você pode utilizar as ferramentas definidas
+            no Flake.
+        </p>
+
+        <pre><code>python --version
+    git --version</code></pre>
+
+        <p>
+            Para sair do ambiente:
+        </p>
+
+        <pre><code>exit</code></pre>
+
+        <div class="alert alert-success">
+            O comando <code>nix develop</code> não altera o
+            <code>configuration.nix</code> e não requer privilégios administrativos.
+        </div>
+    </section>
+
+
+    <section>
+        <h2>Dependências e <code>flake.lock</code></h2>
+
+        <p>
+            As dependências do projeto podem ser adicionadas diretamente ao
+            <code>flake.nix</code>.
+        </p>
+
+        <p>
+            Por exemplo, um projeto pode utilizar:
+        </p>
+
+        <pre><code>packages = with pkgs; [
+        python312
+        git
+        gcc
+        gnumake
+    ];</code></pre>
+
+        <p>
+            Ao utilizar um Flake, o Nix também mantém o arquivo:
+        </p>
+
+        <pre><code>flake.lock</code></pre>
+
+        <p>
+            Enquanto o <code>flake.nix</code> descreve <strong>o que o projeto
+            precisa</strong>, o <code>flake.lock</code> registra
+            <strong>quais revisões das dependências</strong> devem ser utilizadas.
+        </p>
+
+        <p>
+            Assim, outro computador pode obter o mesmo ambiente executando:
+        </p>
+
+        <pre><code>nix develop</code></pre>
+
+        <p>
+            Para atualizar as dependências:
+        </p>
+
+        <pre><code>nix flake update</code></pre>
+
+        <div class="alert alert-warning">
+            Evite atualizar o <code>flake.lock</code> sem necessidade em projetos
+            que já estejam funcionando, pois uma atualização pode modificar as
+            versões das dependências.
+        </div>
+    </section>
+
+
+    <section>
+        <h2>Compartilhando o ambiente com Git</h2>
+
+        <p>
+            Os arquivos do ambiente devem ser versionados junto com o projeto:
+        </p>
+
+        <pre><code>flake.nix
+    flake.lock</code></pre>
+
+        <p>
+            Por exemplo:
+        </p>
+
+        <pre><code>git add flake.nix flake.lock
+    git commit -m "Adiciona ambiente Nix"
+    git push</code></pre>
+
+        <p>
+            Outro usuário pode então clonar o projeto e executar:
+        </p>
+
+        <pre><code>git clone &lt;repositorio&gt;
+    cd &lt;projeto&gt;
+    nix develop</code></pre>
+
+        <p>
+            Dessa forma, o ambiente de desenvolvimento pode ser reproduzido em
+            diferentes computadores do laboratório.
+        </p>
+    </section>
+
+
+    <section>
+        <h2>Quando solicitar ajuda?</h2>
+
+        <p>
+            Sempre que precisar de uma ferramenta específica para seu projeto,
+            tente primeiro adicioná-la ao seu <code>flake.nix</code>.
+        </p>
+
+        <p>
+            Se a ferramenta precisar ser instalada globalmente ou depender de
+            alguma configuração do sistema, solicite ao responsável do laboratório.
+        </p>
+
+        <ul>
+            <li>
+                <strong>Dependência do projeto:</strong>
+                utilize um Flake.
+            </li>
+
+            <li>
+                <strong>Programa para todos os usuários:</strong>
+                solicite ao responsável.
+            </li>
+
+            <li>
+                <strong>Driver, serviço ou configuração do sistema:</strong>
+                solicite ao responsável.
+            </li>
+        </ul>
+
+        <div class="key-point">
+            <strong>Regra principal:</strong>
+            não tente instalar ou modificar programas globalmente.
+            Para as necessidades do seu projeto, prefira Flakes.
+        </div>
+        <br>
+    </section>
+
+
     <!-- Footer -->
     <footer class="bg-success text-white text-center py-3">
         <div class="container">
