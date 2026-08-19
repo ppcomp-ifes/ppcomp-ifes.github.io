@@ -29,6 +29,7 @@ pnpm-debug.log*
 .idea/
 *.swp
 *.swo
+.vscode
 
 # Arquivos do sistema operacional
 .DS_Store
