@@ -1,282 +1,262 @@
-    const spreadsheetId =
-        "2PACX-1vQWqgqmVvrzNaU1yGKM4GWlFkyXz0MqzEmZtlAs57Nx4t0DhKmDsOP4PWeWZSn8-TTnNzJWkbaP3WZX";
+const spreadsheetId = "2PACX-1vQWqgqmVvrzNaU1yGKM4GWlFkyXz0MqzEmZtlAs57Nx4t0DhKmDsOP4PWeWZSn8-TTnNzJWkbaP3WZX";
 
-    const gid = "0";
+const csvUrlControle = 
+    `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=0&single=true&output=csv`;
 
-    const csvUrl =
-        `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=${gid}&single=true&output=csv`;
+const csvUrlConfiguracao = 
+    `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=1181813306&single=true&output=csv`;
 
+/*
+ * ==============================
+ * ATUALIZA AS TABELAS
+ * ==============================
+ */
 
-    /*
-     * ==============================
-     * ATUALIZA AS TABELAS
-     * ==============================
-     */
+function atualizarTabelas() {
 
-    function atualizarTabelas() {
+    const timestamp = Date.now();
 
-        // Adiciona um parâmetro para evitar cache
-        const urlAtualizada =
-            `${csvUrl}&t=${Date.now()}`;
+    Promise.all([
+        fetch(`${csvUrlControle}&t=${timestamp}`).then(r => {
+            if (!r.ok) throw new Error("Não foi possível acessar a planilha de controle.");
+            return r.text();
+        }),
+        fetch(`${csvUrlConfiguracao}&t=${timestamp}`).then(r => {
+            if (!r.ok) throw new Error("Não foi possível acessar a planilha de configuração.");
+            return r.text();
+        })
+    ])
+    .then(([csvControle, csvConfiguracao]) => {
 
-        fetch(urlAtualizada)
-            .then(response => {
+        /*
+         * ==============================
+         * PRIMEIRA TABELA — A1:I20
+         * ==============================
+         */
 
-                if (!response.ok) {
-                    throw new Error(
-                        "Não foi possível acessar a planilha."
-                    );
-                }
+        const firstTableRows = parseCSV(csvControle)
+            .slice(0, 20)
+            .map(row => row.slice(0, 9));
 
-                return response.text();
-            })
-
-            .then(csv => {
-
-                const rows = parseCSV(csv);
-
-
-                /*
-                 * ==============================
-                 * PRIMEIRA TABELA — C1:J20
-                 * ==============================
-                 */
-
-                const firstTableRows = rows
-                    .slice(0, 20)
-                    .map(row => row.slice(2, 10));
-
-                createTable(
-                    firstTableRows,
-                    "machines-table",
-                    true
-                );
-
-
-                /*
-                 * ==============================
-                 * SEGUNDA TABELA — A22:B26
-                 * ==============================
-                 */
-
-                const secondTableRows = rows
-                    .slice(21, 26)
-                    .map(row => row.slice(0, 2));
-
-                createTable(
-                    secondTableRows,
-                    "summary-table",
-                    false
-                );
-
-            })
-
-            .catch(error => {
-
-                console.error(error);
-
-                document.querySelector(
-                    ".machines-table-container"
-                ).innerHTML = `
-                    <p style="
-                        padding: 20px;
-                        text-align: center;
-                        color: #c62828;
-                    ">
-                        Não foi possível carregar o status dos computadores.
-                    </p>
-                `;
-            });
-    }
-
-
-    /*
-     * ==============================
-     * PRIMEIRA ATUALIZAÇÃO
-     * ==============================
-     */
-
-    atualizarTabelas();
-
-
-    /*
-     * ==============================
-     * ATUALIZA A CADA 1 MINUTOS
-     * ==============================
-     */
-
-    setInterval(atualizarTabelas, 60 * 1000);
-
-
-    /*
-     * ==============================
-     * CRIA UMA TABELA HTML
-     * ==============================
-     */
-
-    function createTable(rows, tableId, colorStatus) {
-
-        if (rows.length === 0) {
-            return;
-        }
-
-        const table = document.getElementById(tableId);
-
-        const thead = table.querySelector("thead");
-        const tbody = table.querySelector("tbody");
+        createTable(
+            firstTableRows,
+            "machines-table",
+            true
+        );
 
 
         /*
-         * Limpa a tabela anterior
-         * antes de inserir os novos dados.
+         * ==============================
+         * SEGUNDA TABELA — A1:E3
+         * ==============================
          */
 
-        thead.innerHTML = "";
-        tbody.innerHTML = "";
+        const secondTableRows = parseCSV(csvConfiguracao)
+            .slice(0, 4)
+            .map(row => row.slice(0, 4));
 
+        createTable(
+            secondTableRows,
+            "summary-table",
+            false
+        );
 
-        /*
-         * Primeira linha = cabeçalho
-         */
+    })
+    .catch(error => {
 
-        const header = rows[0];
+        console.error(error);
 
-        thead.innerHTML = `
-            <tr>
-                ${header.map(column => `
-                    <th>${escapeHTML(column)}</th>
-                `).join("")}
-            </tr>
+        document.querySelector(".machines-table-container").innerHTML = `
+            <p style="
+                padding:20px;
+                text-align:center;
+                color:#c62828;
+            ">
+                Não foi possível carregar os dados das planilhas.
+            </p>
         `;
+    });
+}
+
+/*
+    * ==============================
+    * PRIMEIRA ATUALIZAÇÃO
+    * ==============================
+    */
+
+atualizarTabelas();
 
 
-        /*
-         * Demais linhas = dados
-         */
 
-        rows.slice(1).forEach(row => {
+/*
+    * ==============================
+    * CRIA UMA TABELA HTML
+    * ==============================
+    */
 
-            const tr = document.createElement("tr");
+function createTable(rows, tableId, colorStatus) {
 
-            row.forEach((cell, index) => {
-
-                const td = document.createElement("td");
-
-
-                /*
-                 * Colore SOMENTE "Ativo"
-                 * na coluna Status.
-                 */
-
-                if (
-                    colorStatus &&
-                    header[index] &&
-                    header[index].trim().toLowerCase() === "status" &&
-                    cell.trim() === "Ativo"
-                ) {
-
-                    td.classList.add("status-active");
-
-                    td.innerHTML = `
-                        ${escapeHTML(cell)}
-                    `;
-
-                } else {
-
-                    td.textContent = cell;
-                }
-
-                tr.appendChild(td);
-            });
-
-            tbody.appendChild(tr);
-        });
+    if (rows.length === 0) {
+        return;
     }
+
+    const table = document.getElementById(tableId);
+
+    const thead = table.querySelector("thead");
+    const tbody = table.querySelector("tbody");
 
 
     /*
-     * ==============================
-     * PARSER CSV
-     * ==============================
-     */
+        * Limpa a tabela anterior
+        * antes de inserir os novos dados.
+        */
 
-    function parseCSV(csv) {
+    thead.innerHTML = "";
+    tbody.innerHTML = "";
 
-        const rows = [];
 
-        let row = [];
-        let value = "";
-        let insideQuotes = false;
+    /*
+        * Primeira linha = cabeçalho
+        */
 
-        for (let i = 0; i < csv.length; i++) {
+    const header = rows[0];
 
-            const char = csv[i];
-            const next = csv[i + 1];
+    thead.innerHTML = `
+        <tr>
+            ${header.map(column => `
+                <th>${escapeHTML(column)}</th>
+            `).join("")}
+        </tr>
+    `;
+
+
+    /*
+        * Demais linhas = dados
+        */
+
+    rows.slice(1).forEach(row => {
+
+        const tr = document.createElement("tr");
+
+        row.forEach((cell, index) => {
+
+            const td = document.createElement("td");
+
+
+            /*
+                * Colore SOMENTE "Ativo"
+                * na coluna Status.
+                */
 
             if (
-                char === '"' &&
-                insideQuotes &&
-                next === '"'
+                colorStatus &&
+                header[index] &&
+                header[index].trim().toLowerCase() === "status" &&
+                cell.trim() === "Ativo"
             ) {
 
-                value += '"';
-                i++;
+                td.classList.add("status-active");
 
-            } else if (char === '"') {
+                td.innerHTML = `
+                    ${escapeHTML(cell)}
+                `;
 
-                insideQuotes = !insideQuotes;
+            } else {
 
-            } else if (
-                char === "," &&
-                !insideQuotes
-            ) {
-
-                row.push(value);
-                value = "";
-
-            } else if (
-                char === "\n" &&
-                !insideQuotes
-            ) {
-
-                row.push(value);
-                rows.push(row);
-
-                row = [];
-                value = "";
-
-            } else if (char !== "\r") {
-
-                value += char;
+                td.textContent = cell;
             }
-        }
+
+            tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+    });
+}
+
+
+/*
+    * ==============================
+    * PARSER CSV
+    * ==============================
+    */
+
+function parseCSV(csv) {
+
+    const rows = [];
+
+    let row = [];
+    let value = "";
+    let insideQuotes = false;
+
+    for (let i = 0; i < csv.length; i++) {
+
+        const char = csv[i];
+        const next = csv[i + 1];
 
         if (
-            value !== "" ||
-            row.length > 0
+            char === '"' &&
+            insideQuotes &&
+            next === '"'
+        ) {
+
+            value += '"';
+            i++;
+
+        } else if (char === '"') {
+
+            insideQuotes = !insideQuotes;
+
+        } else if (
+            char === "," &&
+            !insideQuotes
+        ) {
+
+            row.push(value);
+            value = "";
+
+        } else if (
+            char === "\n" &&
+            !insideQuotes
         ) {
 
             row.push(value);
             rows.push(row);
+
+            row = [];
+            value = "";
+
+        } else if (char !== "\r") {
+
+            value += char;
         }
-
-        return rows;
     }
 
+    if (
+        value !== "" ||
+        row.length > 0
+    ) {
 
-    /*
-     * ==============================
-     * SEGURANÇA
-     * ==============================
-     */
-
-    function escapeHTML(value) {
-
-        return String(value)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+        row.push(value);
+        rows.push(row);
     }
+
+    return rows;
+}
+
+
+/*
+    * ==============================
+    * SEGURANÇA
+    * ==============================
+    */
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
 
