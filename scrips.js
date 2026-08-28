@@ -36,7 +36,7 @@ function atualizarTabelas() {
 
         const firstTableRows = parseCSV(csvControle)
             .slice(0, 20)
-            .map(row => row.slice(0, 9));
+            .map(row => [...row.slice(0, 8), row[9]]);
 
         createTable(
             firstTableRows,
