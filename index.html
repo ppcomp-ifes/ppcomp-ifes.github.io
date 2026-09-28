@@ -293,11 +293,6 @@
 
         <pre><code>sudo nixos-rebuild switch</code></pre>
 
-        <div class="alert alert-info">
-            Se você precisar de um programa instalado globalmente,
-            <strong>solicite ao responsável do laboratório</strong>.
-            Para ferramentas específicas do seu projeto, utilize um Flake.
-        </div>
     </section>
     <br>
 
@@ -378,14 +373,14 @@
             no Flake.
         </p>
 
-        <pre><code>python --version
+        <pre><code>    python --version
     git --version</code></pre>
 
         <p>
             Para sair do ambiente:
         </p>
 
-        <pre><code>exit</code></pre>
+        <pre><code>    exit</code></pre>
 
         <div class="alert alert-success">
             O comando <code>nix develop</code> não altera o
@@ -406,7 +401,7 @@
             Por exemplo, um projeto pode utilizar:
         </p>
 
-        <pre><code>packages = with pkgs; [
+        <pre><code>    packages = with pkgs; [
         python312
         git
         gcc
@@ -417,7 +412,7 @@
             Ao utilizar um Flake, o Nix também mantém o arquivo:
         </p>
 
-        <pre><code>flake.lock</code></pre>
+        <pre><code>    flake.lock</code></pre>
 
         <p>
             Enquanto o <code>flake.nix</code> descreve <strong>o que o projeto
@@ -429,13 +424,13 @@
             Assim, outro computador pode obter o mesmo ambiente executando:
         </p>
 
-        <pre><code>nix develop</code></pre>
+        <pre><code>    nix develop</code></pre>
 
         <p>
             Para atualizar as dependências:
         </p>
 
-        <pre><code>nix flake update</code></pre>
+        <pre><code>    nix flake update</code></pre>
 
         <div class="alert alert-warning">
             Evite atualizar o <code>flake.lock</code> sem necessidade em projetos
@@ -452,14 +447,14 @@
             Os arquivos do ambiente devem ser versionados junto com o projeto:
         </p>
 
-        <pre><code>flake.nix
+        <pre><code>    flake.nix
     flake.lock</code></pre>
 
         <p>
             Por exemplo:
         </p>
 
-        <pre><code>git add flake.nix flake.lock
+        <pre><code>    git add flake.nix flake.lock
     git commit -m "Adiciona ambiente Nix"
     git push</code></pre>
 
@@ -467,7 +462,7 @@
             Outro usuário pode então clonar o projeto e executar:
         </p>
 
-        <pre><code>git clone &lt;repositorio&gt;
+        <pre><code>    git clone &lt;repositorio&gt;
     cd &lt;projeto&gt;
     nix develop</code></pre>
 
@@ -508,11 +503,6 @@
             </li>
         </ul>
 
-        <div class="key-point">
-            <strong>Regra principal:</strong>
-            não tente instalar ou modificar programas globalmente.
-            Para as necessidades do seu projeto, prefira Flakes.
-        </div>
         <br>
     </section>
     <br>
