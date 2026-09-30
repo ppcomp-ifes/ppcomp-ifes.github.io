@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nix e NixOS | PPComp IFES</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container"><a class="navbar-brand" href="/">PPComp - IFES</a><button class="navbar-toggler"
+                type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
+                aria-expanded="false" aria-label="Abrir navegação"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/status/">Status</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/vpn/">VPN</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/nix/">Nix</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/templates/">Templates</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="container py-4">
+        <p class="mb-4"><a class="home-return" href="/">← Página inicial</a></p>
+        <h1>Tutoriais de Nix e NixOS</h1>
+        <p>Introdução às configurações do laboratório e à criação de ambientes de desenvolvimento reproduzíveis.</p>
+        <section id="NixOS">
+            <h2>O que é o NixOS?</h2>
+
+            <p>
+                O <strong>NixOS</strong> é uma distribuição Linux baseada no
+                gerenciador de pacotes <code>Nix</code>. Sua principal característica
+                é a <strong>configuração declarativa</strong>: em vez de instalar
+                programas e configurar o sistema manualmente, descrevemos como ele
+                deve ser configurado e o NixOS constrói o sistema a partir dessa
+                descrição.
+            </p>
+
+            <p>
+                No laboratório, essa configuração é dividida em dois níveis:
+            </p>
+
+            <ul>
+                <li>
+                    <strong><code>configuration.nix</code></strong> —
+                    configura o sistema operacional e é administrado pelo responsável
+                    do laboratório.
+                </li>
+
+                <li>
+                    <strong><code>flake.nix</code></strong> —
+                    define o ambiente de desenvolvimento de cada projeto e pode ser
+                    utilizado pelo próprio usuário.
+                </li>
+            </ul>
+
+            <div class="alert alert-warning">
+                <strong>Importante:</strong>
+                usuários do laboratório não possuem acesso <code>sudo</code>.
+                Portanto, alterações na configuração global devem ser solicitadas
+                ao responsável do laboratório.
+            </div>
+        </section>
+        <br>
+
+        <section>
+            <h2>Configuração do sistema: <code>configuration.nix</code></h2>
+
+            <p>
+                A configuração global do NixOS está no arquivo:
+            </p>
+
+            <pre><code>    /etc/nixos/configuration.nix</code></pre>
+
+            <p>
+                Ele define características que afetam todo o computador, como
+                programas instalados globalmente, serviços, drivers e configurações
+                de hardware e rede.
+            </p>
+
+            <p>
+                Por exemplo, programas disponíveis para todos os usuários podem ser
+                definidos assim:
+            </p>
+
+            <pre><code>    environment.systemPackages = with pkgs; [
+        git
+        firefox
+        vscode
+    ];</code></pre>
+
+            <p>
+                Depois de uma alteração, o sistema é reconstruído pelo administrador:
+            </p>
+
+            <pre><code>sudo nixos-rebuild switch</code></pre>
+
+        </section>
+        <br>
+
+    <section>
+        <h2>Ambientes rápidos com <code>nix-shell</code></h2>
+
+        <p>
+            Para usar uma ferramenta de forma pontual, sem criar nenhum arquivo,
+            use o <code>nix-shell</code> com a opção <code>-p</code> (de
+            <em>packages</em>):
+        </p>
+
+        <pre><code>    nix-shell -p python312 git gcc</code></pre>
+
+        <p>
+            Os programas ficam disponíveis apenas dentro dessa sessão.
+            Para sair, use:
+        </p>
+
+        <pre><code>    exit</code></pre>
+
+        <p>
+            Para não precisar informar os pacotes toda vez, é possível
+            salvá-los em um arquivo <code>shell.nix</code> na pasta do projeto:
+        </p>
+
+        <pre><code>    { pkgs ? import &lt;nixpkgs&gt; {} }:
+        pkgs.mkShell {
+        packages = with pkgs; [
+            python312
+            git
+            gcc
+        ];
+    }</code></pre>
+
+        <p>
+            Depois, basta executar na pasta do projeto:
+        </p>
+
+        <pre><code>    nix-shell</code></pre>
+
+        <div class="alert alert-success">
+            Assim como o <code>nix develop</code>, o <code>nix-shell</code>
+            não altera o <code>configuration.nix</code> e não requer
+            <code>sudo</code>.
+        </div>
+
+        <div class="key-point">
+            <strong>Shell ou Flake?</strong>
+            O <code>nix-shell</code> é uma forma simples e rápida de configurar
+            um ambiente. Já o <strong>Flake</strong> permite definir um ambiente
+            de projeto de forma reproduzível e versionável.
+        </div>
+    </section>
+    <br>
+
+    <section>
+        <h2>Ambientes de desenvolvimento com Flakes</h2>
+
+        <p>
+            Um <strong>Flake</strong> permite declarar as ferramentas e
+            dependências necessárias para um projeto sem modificar a configuração
+            global do computador.
+        </p>
+
+        <p>
+            Isso permite criar ambientes:
+        </p>
+
+        <ul>
+            <li>
+                <strong>Reproduzíveis</strong> — a mesma configuração pode ser
+                recriada em diferentes computadores;
+            </li>
+            <li>
+                <strong>Isolados</strong> — as dependências do projeto não
+                precisam ser instaladas globalmente;
+            </li>
+            <li>
+                <strong>Versionáveis</strong> — a configuração do ambiente pode
+                acompanhar o código no Git.
+            </li>
+        </ul>
+
+        <div class="key-point">
+            <strong>Principal vantagem no laboratório:</strong>
+            você pode configurar as ferramentas necessárias para seu projeto
+            <strong>sem precisar de <code>sudo</code></strong>.
+        </div>
+    </section>
+    <br>
+
+    <section>
+        <h2>Criando seu primeiro Flake</h2>
+
+        <p>
+            Dentro da pasta do projeto, crie um arquivo chamado:
+        </p>
+
+        <pre><code>    flake.nix</code></pre>
+
+        <p>
+            Um exemplo de ambiente para desenvolvimento Python:
+        </p>
+
+        <pre><code>    description = "Ambiente de desenvolvimento Python";
+
+        inputs.nixpkgs.url =
+            "github:NixOS/nixpkgs/nixos-26.05";
+
+        outputs = { nixpkgs, ... }:
+            let
+            system = "x86_64-linux";
+            pkgs = nixpkgs.legacyPackages.${system};
+            in {
+                devShells.${system}.default = pkgs.mkShell {
+                    packages = with pkgs; [
+                    python312
+                    git
+                ];
+            };
+        };</code></pre>
+
+        <p>
+            Os programas declarados em <code>packages</code> estarão disponíveis
+            dentro do ambiente do projeto.
+        </p>
+
+        <p>
+            Para entrar no ambiente:
+        </p>
+
+        <pre><code>    nix develop</code></pre>
+
+        <p>
+            A partir desse momento, você pode utilizar as ferramentas definidas
+            no Flake.
+        </p>
+
+        <pre><code>    python --version
+
+    git --version</code></pre>
+
+        <p>
+            Para sair do ambiente:
+        </p>
+
+        <pre><code>    exit</code></pre>
+
+        <div class="alert alert-success">
+            O comando <code>nix develop</code> não altera o
+            <code>configuration.nix</code> e não requer privilégios administrativos.
+        </div>
+    </section>
+    <br>
+
+    <section>
+        <h2>Dependências e <code>flake.lock</code></h2>
+
+        <p>
+            As dependências do projeto podem ser adicionadas diretamente ao
+            <code>flake.nix</code>.
+        </p>
+
+        <p>
+            Por exemplo, um projeto pode utilizar:
+        </p>
+
+        <pre><code>    packages = with pkgs; [
+        python312
+        git
+        gcc
+        gnumake
+
+    ];</code></pre>
+
+        <p>
+            Ao utilizar um Flake, o Nix também mantém o arquivo:
+        </p>
+
+        <pre><code>    flake.lock</code></pre>
+
+        <p>
+            Enquanto o <code>flake.nix</code> descreve <strong>como o ambiente
+            deve ser configurado</strong>, o <code>flake.lock</code> registra
+            as versões e revisões dos <strong>inputs do Flake</strong>.
+            Isso permite reproduzir a mesma configuração posteriormente.
+        </p>
+
+        <p>
+            Assim, outro computador pode obter o mesmo ambiente executando:
+        </p>
+
+        <pre><code>    nix develop</code></pre>
+
+        <p>
+            Para atualizar os inputs do Flake:
+        </p>
+
+        <pre><code>    nix flake update</code></pre>
+
+        <div class="alert alert-warning">
+            Evite atualizar o <code>flake.lock</code> sem necessidade em projetos
+            que já estejam funcionando, pois uma atualização pode alterar as
+            versões das dependências utilizadas pelo ambiente.
+        </div>
+    </section>
+    <br>
+
+
+        <section>
+            <h3>Compartilhando o ambiente com Git</h3>
+
+            <p>
+                Os arquivos do ambiente devem ser versionados junto com o projeto:
+            </p>
+
+            <pre><code>    flake.nix
+    flake.lock</code></pre>
+
+            <p>
+                Por exemplo:
+            </p>
+
+            <pre><code>    git add flake.nix flake.lock
+    git commit -m "Adiciona ambiente Nix"
+    git push</code></pre>
+
+            <p>
+                Outro usuário pode então clonar o projeto e executar:
+            </p>
+
+            <pre><code>    git clone &lt;repositorio&gt;
+    cd &lt;projeto&gt;
+    nix develop</code></pre>
+
+            <p>
+                Dessa forma, o ambiente de desenvolvimento pode ser reproduzido em
+                diferentes computadores do laboratório.
+            </p>
+        </section>
+        <br>
+
+        <section>
+            <h2>Quando solicitar ajuda?</h2>
+
+            <p>
+                Sempre que precisar de uma ferramenta específica para seu projeto,
+                tente primeiro adicioná-la ao seu <code>flake.nix</code>.
+            </p>
+
+            <p>
+                Se a ferramenta precisar ser instalada globalmente ou depender de
+                alguma configuração do sistema, solicite ao responsável do laboratório.
+            </p>
+
+            <ul>
+                <li>
+                    <strong>Dependência do projeto:</strong>
+                    utilize um Flake.
+                </li>
+
+                <li>
+                    <strong>Programa para todos os usuários:</strong>
+                    solicite ao responsável.
+                </li>
+
+                <li>
+                    <strong>Driver, serviço ou configuração do sistema:</strong>
+                    solicite ao responsável.
+                </li>
+            </ul>
+
+            <br>
+        </section>
+        <br>
+
+    </main>
+    <footer class="bg-success text-white text-center py-3"><small>&copy; 2024 PPComp - Instituto Federal do Espírito
+            Santo</small></footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

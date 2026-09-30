@@ -1,0 +1,74 @@
+<div class="accordion-item" data-tags="python python313 uv cuda cudatoolkit pytorch gcc flake">
+	<h2 class="accordion-header">
+		<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+			data-bs-target="#python313-uv-cuda-flake">
+			Python 3.13 + uv + CUDA + PyTorch
+			<span class="badge text-bg-success ms-2">flake.nix</span>
+		</button>
+	</h2>
+	<div id="python313-uv-cuda-flake" class="accordion-collapse collapse">
+		<div class="accordion-body">
+			<p>Ambiente para projetos Python com uv, CUDA e dependências nativas usadas por PyTorch. Salve como
+				<code>flake.nix</code> e entre com <code>nix develop</code>.
+				<br>
+				Para fazer a instalação do torch corretamente com acesso à GPU, utilize o comando abaixo:<br>
+				<code>uv add torch torchvision torchaudio --index https://download.pytorch.org/whl/cu132</code>
+			</p>
+			<button type="button" class="btn btn-sm btn-outline-secondary mb-2 copy">Copiar</button>
+			<pre><code>{
+  description = "Python 3.13 + uv + CUDA + PyTorch";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  };
+
+  outputs = { self, nixpkgs, ... }:
+    let
+      system = "x86_64-linux";
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
+    in {
+      devShells.${system}.default = pkgs.mkShell {
+        packages = with pkgs; [
+          python313
+          uv
+
+          # CUDA toolkit
+          cudaPackages.cudatoolkit
+
+          # C/C++
+          gcc
+          pkg-config
+
+          # Bibliotecas nativas
+          libxcb
+          libX11
+          libGL
+          glib
+        ];
+
+        shellHook = ''
+          export CUDA_PATH="${pkgs.cudaPackages.cudatoolkit}"
+          export PATH="$CUDA_PATH/bin:$PATH"
+          export LD_LIBRARY_PATH="${
+            pkgs.lib.makeLibraryPath [
+              pkgs.stdenv.cc.cc.lib
+              pkgs.cudaPackages.cudatoolkit
+              pkgs.libxcb
+              pkgs.libX11
+              pkgs.libGL
+              pkgs.glib
+            ]
+          }:/run/opengl-driver/lib:$LD_LIBRARY_PATH"
+
+          echo "Python: $(python --version)"
+          echo "uv: $(uv --version)"
+        '';
+      };
+    };
+}</code></pre>
+		</div>
+	</div>
+</div>

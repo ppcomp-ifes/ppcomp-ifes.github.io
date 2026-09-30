@@ -1,7 +1,48 @@
 section{
-    width: 75%;
+    width: 100%;
     justify-self: center;
     border-radius: 20px;
+}
+
+/* Keep the footer at the bottom when a page has little content. */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+    align-self: center;
+}
+
+footer {
+    flex-shrink: 0;
+}
+
+.home-return {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid #198754;
+    border-radius: 999px;
+    color: #146c43;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
+}
+
+.home-return:hover,
+.home-return:focus-visible {
+    color: #fff;
+    background-color: #198754;
+    box-shadow: 0 3px 10px rgba(25, 135, 84, 0.2);
+}
+
+.home-return:focus-visible {
+    outline: 3px solid rgba(25, 135, 84, 0.35);
+    outline-offset: 2px;
 }
 
 
@@ -9,23 +50,11 @@ section{
        CONTEÚDO PRINCIPAL
        ============================== */
 
-    main {
-        max-width: 1000px;
-        margin: auto;
+    .container {
+        margin: 0;
+        justify-self: center;
     }
 
-
-    /* ==============================
-       CÓDIGO
-       ============================== */
-
-    .code {
-        font-family: 'Courier New', Courier, monospace;
-        border: solid black 1px;
-        background-color: lightgrey;
-        max-width: 90%;
-        margin: auto;
-    }
 
 
     /* ==============================

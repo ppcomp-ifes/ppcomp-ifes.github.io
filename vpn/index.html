@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>VPN | PPComp IFES</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container"><a class="navbar-brand" href="/">PPComp - IFES</a><button class="navbar-toggler"
+                type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
+                aria-expanded="false" aria-label="Abrir navegação"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/status/">Status</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/vpn/">VPN</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/nix/">Nix</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/templates/">Templates</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="container py-4">
+        <p class="mb-4"><a class="home-return" href="/">← Página inicial</a></p>
+        <h1>Acesso remoto e configuração da VPN</h1>
+        <p>Para acessar os computadores do laboratório remotamente, solicite acesso e conecte-se à VPN antes de iniciar
+            uma sessão SSH.</p>
+        <section id="acesso_vpn">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2> Procedimento de Acesso </h2>
+                    <ol>
+                        <li>Solicitar à CTI (Coordenadoria de Tecnologia da Informação) acesso à VNP do
+                            laboratório 902T pelo <a href="https://helpdesk.serra.ifes.edu.br/">sistema de
+                                chamados</a>.</li>
+                        <li>Enviar email para maquinas902@gmail.com, informando seu nome completo, matrícula e o nome do
+                            seu orientador(a), solicitando criação de usuário nas máquinas.
+                        </li>
+                        <li>Após a solicitação você receberá acesso a todos os computadores,</li>
+                        <li>Para acessar as máquinas, use o comando ssh como ilustrado abaixo: <br>
+                            <div class="code">
+                                ssh joao@172.19.113.7
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+        <br>
+        <section id="configuração_vpn">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2> Configuração da VPN </h2>
+                    <i>[A instação e configuração de programas só precisa ser feita uma vez, mas para acessar os
+                        computadores é
+                        necessário estar conectado à VPN]</i>
+                    <br>
+                    <br>
+                    <b> Configuração para Windows </b> <br>
+                    0) Fazer o download do instalador do OpenVPN pré-configurado. <br>
+                    <ul>
+                        <li><a href="/files/openvpn-Cachalote-UDP4-1196-install-2.5.2-I601-amd64.exe">Instalador
+                                -
+                                64 bits (recomendada)</a></li>
+                        <li><a href="/files/openvpn-Cachalote-UDP4-1196-install-2.5.2-I601-x86.exe">Instalador
+                                -
+                                32 bits</a></li>
+                    </ul>
+                    1) Instalar o programa clicando em próximo (next). <br>
+                    2) Clicar com o botão direito no ícone indicado na figura abaixo, selecionar a rede
+                    Cachalote e clicar em
+                    conectar. <br>
+                    3) Digitar as credenciais. <br>
+                    <img src="/images/conexao-openvpn.png" alt="Ícone do OpenVPN e seleção da conexão Cachalote"
+                        class="img-fluid"> <br>
+                </div>
+            </div>
+
+            <br>
+            <br>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <b> Configuração para Linux </b> <br>
+                    0) Fazer download e descompactar pacote contendo 3 arquivos de configuração: <br>
+                    <ul>
+                        <li><a href="/files/OpenVPN%20Lab%20902T.7z">Pacote com arquivos de
+                                configuração</a>. </li>
+                    </ul>
+                    1) Vá em configuração de rede. <br>
+                    2) Clique no + para adicionar a VPN. <br>
+                    3) Entre as 3 opções apresentadas, escolher importar arquivo. <br>
+                    4) Escolher o arquivo Cachalote-UDP4-1196.ovpn <br>
+                    5) Digitar apenas as credenciais (usuário e senha; as mesmas usadas para acessar o sistema
+                    acadêmico) e clicar
+                    em adicionar. <br>
+                </div>
+            </div>
+            <br>
+        </section>
+        <br>
+    </main>
+    <footer class="bg-success text-white text-center py-3"><small>&copy; 2024 PPComp - Instituto Federal do Espírito
+            Santo</small></footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

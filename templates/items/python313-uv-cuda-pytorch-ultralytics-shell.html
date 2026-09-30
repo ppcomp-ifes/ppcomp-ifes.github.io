@@ -1,0 +1,61 @@
+<div class="accordion-item" data-tags="python python313 uv cuda cudatoolkit pytorch gcc shell">
+	<h2 class="accordion-header">
+		<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+			data-bs-target="#python313-uv-cuda-shell">
+			Python 3.13 + uv + CUDA + PyTorch
+			<span class="badge text-bg-secondary ms-2">shell.nix</span>
+		</button>
+	</h2>
+	<div id="python313-uv-cuda-shell" class="accordion-collapse collapse">
+		<div class="accordion-body">
+			<p>Versão com <code>shell.nix</code> do ambiente Python com uv, CUDA e dependências nativas. Salve na raiz
+				do projeto e entre com <code>nix-shell</code>.
+				<br>
+				Para fazer a instalação do torch corretamente com acesso à GPU, utilize o comando abaixo:<br>
+				<code>uv add torch torchvision torchaudio --index https://download.pytorch.org/whl/cu132</code>
+			</p>
+			<button type="button" class="btn btn-sm btn-outline-secondary mb-2 copy">Copiar</button>
+			<pre><code>{ pkgs ? import &lt;nixpkgs&gt; {
+  config.allowUnfree = true;
+} }:
+
+pkgs.mkShell {
+  packages = with pkgs; [
+    # Python
+    python313
+    uv
+
+    # CUDA
+    cudaPackages.cudatoolkit
+
+    # C/C++
+    gcc
+    pkg-config
+
+    # Bibliotecas nativas
+    libxcb
+    libX11
+    libGL
+    glib
+  ];
+
+  shellHook = ''
+    # Exports necessários para funcionamento de bibliotecas externas com CUDA
+    export CUDA_PATH="${pkgs.cudaPackages.cudatoolkit}"
+    export PATH="$CUDA_PATH/bin:$PATH"
+
+    export LD_LIBRARY_PATH="${
+      pkgs.lib.makeLibraryPath [
+        pkgs.stdenv.cc.cc.lib
+        pkgs.cudaPackages.cudatoolkit
+        pkgs.libxcb
+        pkgs.libX11
+        pkgs.libGL
+        pkgs.glib
+      ]
+    }:/run/opengl-driver/lib:$LD_LIBRARY_PATH"
+  '';
+}</code></pre>
+		</div>
+	</div>
+</div>
