@@ -1,0 +1,65 @@
+<div class="accordion-item" data-tags="python313 uv cuda conda miniconda flake">
+	<h2 class="accordion-header">
+		<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+			data-bs-target="#vscode-python313-uv-git-nvidia-miniconda-flake" aria-controls="vscode-python313-uv-git-nvidia-miniconda-flake" aria-expanded="false">
+			Python 3.13 + Miniconda + CUDA
+			<span class="badge text-bg-success ms-2">flake.nix</span>
+		</button>
+	</h2>
+	<div id="vscode-python313-uv-git-nvidia-miniconda-flake" class="accordion-collapse collapse">
+		<div class="accordion-body">
+			<p>Cole o código em <code>flake.nix</code> na raiz do projeto e execute <code>nix develop</code>.</p>
+			<button type="button" class="btn btn-sm btn-outline-secondary mb-2 copy">Copiar</button>
+			<pre><code>{
+  description = "Python 3.13 + Miniconda + CUDA";
+
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+  outputs = { nixpkgs, ... }:
+    let
+      system = "x86_64-linux";
+
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
+    in {
+      devShells.${system}.default = pkgs.mkShell {
+        packages = with pkgs; [
+          # Editor e ferramentas
+          vscode
+          git
+          gcc
+          pkg-config
+
+          # Python
+          python313
+          uv
+
+          # Conda
+          conda
+
+          # CUDA
+          cudaPackages.cudatoolkit
+        ];
+
+        shellHook = ''
+          export UV_PYTHON="${pkgs.python313}/bin/python3.13"
+          export UV_PYTHON_DOWNLOADS=never
+
+          export CUDA_PATH="${pkgs.cudaPackages.cudatoolkit}"
+
+          export LD_LIBRARY_PATH="/run/opengl-driver/lib:${
+            pkgs.lib.makeLibraryPath [
+              pkgs.stdenv.cc.cc.lib
+              pkgs.cudaPackages.cudatoolkit
+              pkgs.zlib
+            ]
+          }:$LD_LIBRARY_PATH"
+        '';
+      };
+    };
+}</code></pre>
+		</div>
+	</div>
+</div>

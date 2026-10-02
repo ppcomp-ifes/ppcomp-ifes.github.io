@@ -1,22 +1,20 @@
-<div class="accordion-item" data-tags="python python313 uv cuda cudatoolkit pytorch gcc flake">
+<div class="accordion-item" data-tags="python313 uv cuda pytorch flake">
 	<h2 class="accordion-header">
 		<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
 			data-bs-target="#python313-uv-cuda-flake">
-			Python 3.13 + uv + CUDA + PyTorch
+			Python 3.13 + PyTorch + CUDA
 			<span class="badge text-bg-success ms-2">flake.nix</span>
 		</button>
 	</h2>
 	<div id="python313-uv-cuda-flake" class="accordion-collapse collapse">
 		<div class="accordion-body">
-			<p>Ambiente para projetos Python com uv, CUDA e dependências nativas usadas por PyTorch. Salve como
-				<code>flake.nix</code> e entre com <code>nix develop</code>.
-				<br>
-				Para fazer a instalação do torch corretamente com acesso à GPU, utilize o comando abaixo:<br>
+			<p>Cole o código em <code>flake.nix</code> na raiz do projeto e execute <code>nix develop</code>.</p>
+			<p>Para instalar o PyTorch com CUDA, use o índice específico:<br>
 				<code>uv add torch torchvision torchaudio --index https://download.pytorch.org/whl/cu132</code>
 			</p>
 			<button type="button" class="btn btn-sm btn-outline-secondary mb-2 copy">Copiar</button>
 			<pre><code>{
-  description = "Python 3.13 + uv + CUDA + PyTorch";
+  description = "Python 3.13 + PyTorch + CUDA";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";

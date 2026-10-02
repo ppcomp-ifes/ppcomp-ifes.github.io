@@ -16,4 +16,4 @@ O painel de status carrega dados das planilhas públicas definidas em `scrips.js
 
 ## Adicionar um template
 
-Atualmente, a biblioteca contém dois modelos: `flake.nix` e `shell.nix` para Python 3.13, uv e CUDA. Para adicionar outro, crie um fragmento HTML em `templates/items/` com um `.accordion-item` e os atributos `data-tags`, depois inclua o caminho em `templates/index.html`. Os filtros e o botão de cópia ficam em `templates/js/templates.js`.
+A biblioteca contém versões `flake.nix` e `shell.nix` para Python 3.13, uv e CUDA/PyTorch, além de modelos com VS Code, Git, NVIDIA/CUDA e Miniconda. Para adicionar outro, crie um fragmento HTML em `templates/items/` com um `.accordion-item` e os atributos `data-tags`, depois inclua o caminho em `templates/index.html`. Os filtros e o botão de cópia ficam em `templates/js/templates.js`.

@@ -1,17 +1,14 @@
-<div class="accordion-item" data-tags="python313 uv cuda pytorch shell">
+<div class="accordion-item" data-tags="python313 uv cuda conda miniconda shell">
 	<h2 class="accordion-header">
 		<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-			data-bs-target="#python313-uv-cuda-shell">
-			Python 3.13 + PyTorch + CUDA
+			data-bs-target="#vscode-python313-uv-git-nvidia-miniconda-shell" aria-controls="vscode-python313-uv-git-nvidia-miniconda-shell" aria-expanded="false">
+			Python 3.13 + Miniconda + CUDA
 			<span class="badge text-bg-secondary ms-2">shell.nix</span>
 		</button>
 	</h2>
-	<div id="python313-uv-cuda-shell" class="accordion-collapse collapse">
+	<div id="vscode-python313-uv-git-nvidia-miniconda-shell" class="accordion-collapse collapse">
 		<div class="accordion-body">
 			<p>Cole o código em <code>shell.nix</code> na raiz do projeto e execute <code>nix-shell</code>.</p>
-			<p>Para instalar o PyTorch com CUDA, use o índice específico:<br>
-				<code>uv add torch torchvision torchaudio --index https://download.pytorch.org/whl/cu132</code>
-			</p>
 			<button type="button" class="btn btn-sm btn-outline-secondary mb-2 copy">Copiar</button>
 			<pre><code>{ pkgs ? import &lt;nixpkgs&gt; {
   config.allowUnfree = true;
@@ -19,39 +16,36 @@
 
 pkgs.mkShell {
   packages = with pkgs; [
+    # Editor e ferramentas
+    vscode
+    git
+    gcc
+    pkg-config
+
     # Python
     python313
     uv
 
+    # Conda
+    conda
+
     # CUDA
     cudaPackages.cudatoolkit
-
-    # C/C++
-    gcc
-    pkg-config
-
-    # Bibliotecas nativas
-    libxcb
-    libX11
-    libGL
-    glib
   ];
 
   shellHook = ''
-    # Bibliotecas CUDA
-    export CUDA_PATH="${pkgs.cudaPackages.cudatoolkit}"
-    export PATH="$CUDA_PATH/bin:$PATH"
+    export UV_PYTHON="${pkgs.python313}/bin/python3.13"
+    export UV_PYTHON_DOWNLOADS=never
 
-    export LD_LIBRARY_PATH="${
+    export CUDA_PATH="${pkgs.cudaPackages.cudatoolkit}"
+
+    export LD_LIBRARY_PATH="/run/opengl-driver/lib:${
       pkgs.lib.makeLibraryPath [
         pkgs.stdenv.cc.cc.lib
         pkgs.cudaPackages.cudatoolkit
-        pkgs.libxcb
-        pkgs.libX11
-        pkgs.libGL
-        pkgs.glib
+        pkgs.zlib
       ]
-    }:/run/opengl-driver/lib:$LD_LIBRARY_PATH"
+    }:$LD_LIBRARY_PATH"
   '';
 }</code></pre>
 		</div>

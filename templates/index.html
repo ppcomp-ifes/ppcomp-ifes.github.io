@@ -37,18 +37,13 @@
 		<div class="mb-3">
 			<div class="d-flex flex-wrap gap-2 align-items-center" id="filters">
 				<span class="text-muted small">Filtrar:</span>
-				<button type="button" class="btn btn-sm btn-outline-success" data-tag="python">Python</button>
 				<button type="button" class="btn btn-sm btn-outline-success" data-tag="python313">Python 3.13</button>
 				<button type="button" class="btn btn-sm btn-outline-success" data-tag="uv">uv</button>
+				<button type="button" class="btn btn-sm btn-outline-success" data-tag="miniconda">Miniconda</button>
 				<button type="button" class="btn btn-sm btn-outline-success" data-tag="cuda">CUDA</button>
-				<button type="button" class="btn btn-sm btn-outline-success" data-tag="cudatoolkit">CUDA
-					Toolkit</button>
 				<button type="button" class="btn btn-sm btn-outline-success" data-tag="pytorch">PyTorch</button>
-				<button type="button" class="btn btn-sm btn-outline-success" data-tag="gcc">GCC</button>
-				<button type="button" class="btn btn-sm btn-outline-success" data-tag="pkgconfig">pkg-config</button>
 				<button type="button" class="btn btn-sm btn-outline-success" data-tag="flake">flake.nix</button>
 				<button type="button" class="btn btn-sm btn-outline-success" data-tag="shell">shell.nix</button>
-				<button type="button" class="btn btn-sm btn-outline-success" data-tag="java21">jdk21</button>
 				<button type="button" class="btn btn-sm btn-link text-secondary" id="clear">Limpar</button>
 			</div>
 			<div class="form-text">Combine filtros para localizar templates que usam ferramentas específicas.</div>
@@ -58,6 +53,8 @@
 		<div class="accordion" id="templates">
 			<div data-include="items/python313-uv-cuda-pytorch-ultralytics-flake.html"></div>
 			<div data-include="items/python313-uv-cuda-pytorch-ultralytics-shell.html"></div>
+			<div data-include="items/vscode-python313-uv-git-nvidia-miniconda-flake.html"></div>
+			<div data-include="items/vscode-python313-uv-git-nvidia-miniconda-shell.html"></div>
 		</div>
 		<p id="empty" class="text-muted d-none">Nenhum template com essa combinação de filtros.</p>
 		<p id="load-error" class="text-danger d-none">Não foi possível carregar os templates. Tente recarregar a página.
